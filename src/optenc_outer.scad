@@ -96,18 +96,38 @@ module inner_main() {
 }
 
 module bearing_loop () {
-      translate([0, 0, optenc_inner_height/2])
+      translate([0, 0, optenc_inner_height/2+((optenc_outer_height - optenc_inner_height)/2)])
         rotate_extrude()
           translate([optenc_inner_radius, 0, 0])
             circle(r=optenc_bearings_radius);
+}
+
+module zip_tie_trough_half(h, d, t, l, w) {
+  translate([l, 0, 0]) cube([t, w, h]);
+  translate([l+d, w, 0]) rotate([0,0,90]) intersection() {
+    difference() {
+      cylinder(r=d, h=100);
+      cylinder(r=d-t, h=100);
+    }
+    cube([10, 5, h]);
+  }
+}
+
+module zip_tie_trough(h=4, d=4, t=2, l=70, w=4) {
+  zip_tie_trough_half(h, d, t, l, w/2);
+  mirror([0,1,0]) {
+    zip_tie_trough_half(h, d, t, l, w/2);
+  }
 }
 
 module optenc_outer() {
   difference() {
     disc_with_handle();
     inner_main();
+    bearing_loop();
+    translate([0, 0, ((optenc_outer_height - optenc_inner_height)/2)])
+    rotate([0, 0, 135]) zip_tie_trough(d=4.5, l=optenc_outer_radius-6, w=20);
   }
 }
 
 optenc_outer();
-//disc_with_handle();
