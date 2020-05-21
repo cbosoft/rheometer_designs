@@ -2,3 +2,6 @@ tags
 output
 *.stl
 *.blend1
+*.log
+*.aux
+*.pdf
