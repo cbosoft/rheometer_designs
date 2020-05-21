@@ -5,12 +5,15 @@ optenc_inner_height = 5;
 optenc_inner_bulk_height = 30;
 optenc_inner_bulk_radius = 16;
 optenc_inner_bulk_zoffset = 10;
+nw = 15;
+
 
 $fn = 200;
 
 module optenc_inner() {
   difference() {
     union() {
+      translate([-nw/2, -nw/2, optenc_inner_bulk_height-optenc_inner_bulk_zoffset]) cube([nw, nw, 5]);
       difference() {
         difference() {
           cylinder(h=optenc_inner_height, r=optenc_inner_radius);
@@ -35,7 +38,7 @@ module optenc_inner() {
       translate([0, 0, -(optenc_inner_bulk_zoffset)]) 
         cylinder(r=optenc_inner_bulk_radius,h=optenc_inner_bulk_height);
     }
-    translate([0, 0, -15]) cylinder(r=bolt_radius, h=40);
+    translate([0, 0, -15]) cylinder(r=bolt_radius, h=optenc_inner_bulk_height+20);
   }
 }
 
