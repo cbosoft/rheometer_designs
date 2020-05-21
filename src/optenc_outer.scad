@@ -43,9 +43,6 @@ handle_l = 70.0;
 
 $fn = 200;
 
-// this design is incomplete and is lacking the clamp mount of the FreeCAD
-// version.
-
 module optenc_handle() {
   translate([0, optenc_outer_radius, -((optenc_outer_bulk_height/2))])
     rotate([270, 0, 0])
@@ -98,22 +95,61 @@ module inner_main() {
 }
 
 module bearing_loop () {
-      translate([0, 0, optenc_inner_height/2])
+      translate([0, 0, optenc_inner_height/2+((optenc_outer_height - optenc_inner_height)/2)])
         rotate_extrude()
           translate([optenc_inner_radius, 0, 0])
             circle(r=optenc_bearings_radius);
+}
+
+module zip_tie_trough_half(h, d, t, l, w) {
+  translate([l, 0, 0]) cube([t, w, h]);
+  translate([l+d, w, 0]) rotate([0,0,90]) intersection() {
+    difference() {
+      cylinder(r=d, h=100);
+      cylinder(r=d-t, h=100);
+    }
+    cube([10, 5, h]);
+  }
+}
+
+module zip_tie_trough(h=4, d=4, t=2, l=70, w=4) {
+  zip_tie_trough_half(h, d, t, l, w/2);
+  mirror([0,1,0]) {
+    zip_tie_trough_half(h, d, t, l, w/2);
+  }
 }
 
 module optenc_outer() {
   difference() {
     disc_with_handle();
     inner_main();
+    bearing_loop();
+    translate([0, 0, ((optenc_outer_height - optenc_inner_height)/2)])
+    rotate([0, 0, 135]) zip_tie_trough(d=4.5, l=optenc_outer_radius-6, w=20);
   }
 }
 
 module sensor_mount() {
-    rotate([0,0,120]) translate([0, 0, ]) rotate_extrude(angle=30) translate([optenc_inner_radius, 0]) square([optenc_outer_radius - optenc_inner_radius,optenc_outer_height]);
+  bh = 5.0;
+  th = 9.0;
+  cr = 22;
+  ledr = 2.5;
+  ptr = 1.47;
+  difference() {
+    union() {
+      rotate([0, 0,120]) translate([0, 0, 0]) rotate_extrude(angle=30) translate([optenc_inner_radius, 0]) square([optenc_outer_radius - optenc_inner_radius,optenc_outer_height]);
+      rotate([0, 0, 90]) translate([0, 0, optenc_outer_height]) rotate_extrude(angle=90) translate([optenc_outer_radius-cr, 0]) square([cr,th]);
+      rotate([0, 0, 90]) translate([0, 0, -bh]) rotate_extrude(angle=90) translate([optenc_outer_radius-cr, 0]) square([cr,bh]);
+    }
+    for (angle=[-30,0,30])
+      translate([0, 0, 2]) rotate([0, 0, 135+angle]) translate([optenc_outer_radius-cr+4, 0, 0]) cylinder(r=ledr, h=100);
+    for (angle=[-30,0,30])
+      translate([0, 0, -50]) rotate([0, 0, 135+angle]) translate([optenc_outer_radius-cr+4, 0, 0]) cylinder(r=ptr, h=100);
+    translate([0, 0, ((optenc_outer_height - optenc_inner_height)/2)])
+    rotate([0, 0, 135]) zip_tie_trough(d=4.5, l=optenc_outer_radius-6, w=20);
+    bearing_loop();
+  }
 }
 
 optenc_outer();
-//sensor_mount();
+//translate([-5, 5, 0]) sensor_mount();
