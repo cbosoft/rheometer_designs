@@ -111,5 +111,9 @@ module optenc_outer() {
   }
 }
 
+module sensor_mount() {
+    rotate([0,0,120]) translate([0, 0, ]) rotate_extrude(angle=30) translate([optenc_inner_radius, 0]) square([optenc_outer_radius - optenc_inner_radius,optenc_outer_height]);
+}
+
 optenc_outer();
-//disc_with_handle();
+//sensor_mount();
