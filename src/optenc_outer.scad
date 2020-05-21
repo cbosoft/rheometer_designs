@@ -35,8 +35,10 @@ optenc_handle_extent_y = 68;
 optenc_handle_tsts_plug_extent_y = optenc_handle_extent_y - 26;
 optenc_handle_radius = 6.45;
 
-handle_width = 20.0;
-handle_conn_w = 7.0;
+backbone_width = 40;
+handle_width = 20.0; // width of wee bit above cylinder port
+handle_conn_w = 7.0; // sidelength of cube notch
+handle_conn_ww = backbone_width - handle_conn_w - handle_conn_w - 2 -2; // dist between notches
 handle_l = 70.0;
 
 $fn = 200;
@@ -76,8 +78,8 @@ module disc_with_handle () {
       translate([0, -optenc_outer_radius+5, -optenc_handle_radius+optenc_outer_height/2]) rotate([90,0,0]) cylinder(r=optenc_outer_height/2+optenc_handle_radius,h=handle_l-optenc_outer_radius+5);
       translate([0,0,-optenc_outer_height]) cylinder(r=optenc_outer_radius, h=optenc_outer_height*2);
     }
-    translate([handle_width/2, -handle_l+handle_width, -1]) cube([handle_conn_w,handle_conn_w,10]);
-    translate([-handle_conn_w-handle_width/2, -handle_l+handle_width, -1]) cube([handle_conn_w,handle_conn_w,10]);
+    translate([handle_conn_ww/2, -handle_l+handle_width, -1]) cube([handle_conn_w,handle_conn_w,10]);
+    translate([-handle_conn_w-handle_conn_ww/2, -handle_l+handle_width, -1]) cube([handle_conn_w,handle_conn_w,10]);
     translate([0, -optenc_outer_radius, -optenc_handle_radius+optenc_outer_height/2]) rotate([90,0,0]) cylinder(r=optenc_handle_radius,h=handle_l-optenc_outer_radius+5);
 
     rotate([0,0,120]) translate([0,0,-100]) rotate_extrude(angle=30) square([500,500]);
