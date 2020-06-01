@@ -7,7 +7,7 @@ optenc_inner_bulk_radius = 16;
 optenc_inner_bulk_zoffset = 10;
 nw = 15;
 
-
+n = 6;
 $fn = 200;
 
 module optenc_inner() {
@@ -26,9 +26,9 @@ module optenc_inner() {
           // slots
           translate([0,0,-1]) intersection() {
             cylinder(r=26, h=optenc_inner_height+2);
-            for (i = [45:45:360]) {
+            for (i = [360/n:360/n:360]) {
               rotate([0, 0, i])
-                rotate_extrude(angle=22.5)
+                rotate_extrude(angle=180/n)
                   square([optenc_inner_radius, optenc_inner_height+2]);
             }
           }
