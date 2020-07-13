@@ -74,6 +74,21 @@ difference() {
   translate([length_stand_rear-1, (width_stand-5)/2, 10]) cube([11, 5, 10]);
 }
 
+new_loadcell_height = 6;
+new_loadcell_radius = 2;
+
+module small_lc_bracket() {
+  difference() {
+    cube([length_loadcell-47+6.5, width_loadcell, height_loadcell]);
+    translate([length_loadcell-47, -1, (height_loadcell-new_loadcell_height)/2]) cube([10, width_loadcell+2, new_loadcell_height]);
+    translate([length_loadcell-47+3.25, 3, -1]) cylinder(r=2, h=15);
+    translate([length_loadcell-47+3.25, width_loadcell-3, -1]) cylinder(r=2, h=15);
+  }
+}
+
+translate([length_stand_rear-1, (width_stand - width_loadcell)/2, height_bearing]) small_lc_bracket();
+
+
 
 
 //translate([length_stand_rear, (width_stand - width_loadcell)/2, height_bearing]) cube([length_loadcell, width_loadcell, height_loadcell]);
